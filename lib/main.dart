@@ -58,7 +58,7 @@ class MapPageState extends State<MapPage> {
 
     // subscribe to changes in the user's location
     // by "listening" to the location's onLocationChanged event
-    location.onLocationChanged().listen((LocationData cLoc) {
+    location.onLocationChanged.listen((LocationData cLoc) {
       // cLoc contains the lat and long of the
       // current user's position in real time,
       // so we're holding on to it
@@ -191,12 +191,15 @@ class MapPageState extends State<MapPage> {
   }
 
   void setPolylines() async {
-    List<PointLatLng> result = await polylinePoints.getRouteBetweenCoordinates(
+
+    PointLatLng pcurrentLocation = PointLatLng(currentLocation.latitude, currentLocation.longitude);
+    PointLatLng pdestinationLocation = PointLatLng(destinationLocation.latitude, destinationLocation.longitude);
+    PolylineResult resultPolyline = await polylinePoints.getRouteBetweenCoordinates(
         googleAPIKey,
-        currentLocation.latitude,
-        currentLocation.longitude,
-        destinationLocation.latitude,
-        destinationLocation.longitude);
+        pcurrentLocation,
+        pdestinationLocation);
+
+    List<PointLatLng> result = resultPolyline.points ;
 
     if (result.isNotEmpty) {
       result.forEach((PointLatLng point) {
